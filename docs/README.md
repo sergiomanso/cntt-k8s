@@ -53,6 +53,12 @@ The release cycle of the Charmed Kubernetes (CK) is tightly synchronized to the 
 
 ### Infrastructure flavors
 
+The following table describes the flavors available in the underlying infrastructure that cover the Kubernetes CNTT requirements for both Basic and Network Intensive profiles.
+
+| flavor name            | vCPU                     | RAM                     | Local Disk       | Management Interface |
+|------------------------|--------------------------|-------------------------|------------------|----------------------|
+| .4xlarge               | 16                       | 32 GB                   | 320 GB           | 1 Gbps               |
+| .8xlarge               | 32                       | 64 GB                   | 640 GB           | 1 Gbps               |
 
 ### Infrastructure roles
 
