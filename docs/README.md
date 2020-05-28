@@ -53,12 +53,37 @@ The release cycle of the Charmed Kubernetes (CK) is tightly synchronized to the 
 
 ### Infrastructure flavors
 
-The following table describes the flavors available in the underlying infrastructure that cover the Kubernetes CNTT requirements for both Basic and Network Intensive profiles.
+The following tables describe the minimum requirements for the VIM flavors, that will support the CNTT compliant K8s cluster, for both Basic and Network Intensive profiles.
 
-| flavor name            | vCPU                     | RAM                     | Local Disk       | Management Interface |
-|------------------------|--------------------------|-------------------------|------------------|----------------------|
-| .4xlarge               | 16                       | 32 GB                   | 320 GB           | 1 Gbps               |
-| .8xlarge               | 32                       | 64 GB                   | 640 GB           | 1 Gbps               |
+#### Basic Profile
+
+| **Flavor** | **CPU** | **RAM** | **DISK** | **NUMA** | **Hugepages** | **CPU Pinning**| **IPSec Acceleration** | **Crypto Acceleration** |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ---: |
+| lma-node | 8 | 16GB | 500GB | - | - | - | - | - |
+| k8s-control-node | 8 | 16GB | 500GB | - | - | - | - | - |
+| K8s-worker | 32 | 64GB | 500GB | No | No | No | No | No |
+
+#### Network Intensive Profile
+
+| **Flavor** | **CPU** | **RAM** | **DISK** | **NUMA** | **Hugepages** | **CPU Pinning**| **IPSec Acceleration** | **Crypto Acceleration** |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ---: |
+| lma-node | 8 | 16GB | 500GB | - | - | - | - | - |
+| k8s-control-node | 8 | 16GB | 500GB | - | - | - | - | - |
+| K8s-worker | 32 | 64GB | 500GB | Yes | Yes | Yes | Optional | Optional |
+#### VNI Specs
+
+These flavor should be extended so that each interface bandwidth can be customized.
+Note that this is not part of the base flavor.
+
+| Virtual Network Interface Option   | Interface Bandwidth               |
+|------------------------------------|-----------------------------------|
+| n1, n2, n3, n4, n5, n6             | 1, 2, 3, 4, 5, 6 Gbps             |
+| n10, n20, n30, n40, n50, n60       | 10, 20, 30, 40, 50, 60 Gbps       |
+| n25, n50, n75, n100, n125, n150    | 25, 50, 75, 100, 125, 150 Gbps    |
+| n50, n100, n150, n200, n250, n300  | 50, 100, 150, 200, 250, 300 Gbps  |
+| n100, n200, n300, n400, n500, n600 | 100, 200, 300, 400, 500, 600 Gbps |
+
+(This means that each instance needs 6 interfaces?)
 
 ### Infrastructure roles
 
@@ -77,6 +102,15 @@ XXX: TBD networking desingn
 - DNS support
 - NTP
 - Proxy support
+
+### Kubernetes Storage
+
+#### Cluster machines
+Each provisioned Kubernetes worker has local storage on the physical server which can be used by the containers running on that worker. However, this is not replicated storage and containers redeployed onto a different worker node will lose access to any data they may have saved to this local storage. As such it is recommended that clustered storage is used for all persistent data.
+
+#### Containers
+Kubernetes cluster will be integrated with the Cinder CSI plugin to attain persistent volumes for containers. This process requires the enablement of some features gates such as CSIDriverRegistry and CSINodeInfo.
+
 
 ## Juju
 
